@@ -1,2 +1,2 @@
 # JavaLabs
-Java labs spbstu
+Цай Георгий 3530904/80006

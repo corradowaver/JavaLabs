@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Comparator;
+import java.util.List;
 
-public class AnimalManager {
+public class AnimalManager implements AutoCloseable {
   public List<Animal> animalList;
 
   AnimalManager() {
@@ -76,23 +76,6 @@ public class AnimalManager {
       e.printStackTrace();
       animals = new ArrayList<Animal>();
       writeAnimalList(animals);
-    } finally {
-      if (fin != null) {
-        try {
-          fin.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (ois != null) {
-        try {
-          ois.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-
     }
     return animals;
   }
@@ -110,21 +93,11 @@ public class AnimalManager {
       System.out.println("Done");
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      if (fout != null) {
-        try {
-          fout.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-      if (oos != null) {
-        try {
-          oos.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
+  }
+
+  @Override
+  public void close() throws Exception {
+    System.out.println("Closed");
   }
 }

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,10 +10,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AnimalManager implements AutoCloseable {
-  public List<Animal> animalList;
+  public List<Animal> animalList = new ArrayList<>();;
+  File file = new File("rsc/animalsfile");
 
   AnimalManager() {
-    animalList = readAnimalList();
+    readAnimalList();
   }
 
   public void printList() {
@@ -45,6 +47,7 @@ public class AnimalManager implements AutoCloseable {
 
   public void addAnimal(Animal newAnimal) {
     animalList.add(newAnimal);
+    writeAnimalList(animalList);
   }
 
   public void removeAnimal(int id) {
@@ -57,41 +60,30 @@ public class AnimalManager implements AutoCloseable {
     }
   }
 
-  private List<Animal> readAnimalList() {
-    List<Animal> animals = null;
-
-    FileInputStream fin = null;
-    ObjectInputStream ois = null;
-
-    try {
-
-      fin = new FileInputStream("animallist");
-      ois = new ObjectInputStream(fin);
-      animals = (List<Animal>) ois.readObject();
-
+  private void readAnimalList() {
+    file.getParentFile().mkdir();
+    try (FileInputStream fin = new FileInputStream(file);
+         ObjectInputStream ois = new ObjectInputStream(fin)) {
+      file.createNewFile();
+      animalList = (List<Animal>) ois.readObject();
     } catch (FileNotFoundException e) {
-      animals = new ArrayList<Animal>();
-      writeAnimalList(animals);
+      e.printStackTrace();
+			System.out.println("FILE WILL BE CREATED AUTOMATICALLY\nDont worry.");
     } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
-      animals = new ArrayList<Animal>();
-      writeAnimalList(animals);
     }
-    return animals;
   }
 
   private void writeAnimalList(List<Animal> animals) {
-    FileOutputStream fout = null;
-    ObjectOutputStream oos = null;
-
-    try {
-
-      fout = new FileOutputStream("animallist");
-      oos = new ObjectOutputStream(fout);
+    file.getParentFile().mkdir();
+    try (FileOutputStream fout = new FileOutputStream(file);
+         ObjectOutputStream	oos = new ObjectOutputStream(fout)) {
+      file.createNewFile();
       oos.writeObject(animals);
-
-      System.out.println("Done");
-    } catch (Exception e) {
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      System.out.println("FILE WILL BE CREATED AUTOMATICALLY\nDont worry.");
+		} catch (Exception e) {
       e.printStackTrace();
     }
   }

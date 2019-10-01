@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,58 +9,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Library implements AutoCloseable {
-	private List<Book> bookList;
-
+	List<Book> bookList = new ArrayList<>();
+	File file = new File("rsc/booksfile");
+	
 	Library() {
-		bookList = readBookList();
+		readBookList();
 	}
 
-	private List<Book> readBookList() {
-		List<Book> books = null;
+	public Boolean exists(int id) {
+		Boolean result = false;
+		for (Book x : bookList) {
+			if (x.getId() == id) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 
-		FileInputStream fin = null;
-		ObjectInputStream ois = null;
-
-		try {
-
-			fin = new FileInputStream("./rsc/booksfile");
-			ois = new ObjectInputStream(fin);
-			books = (List<Book>) ois.readObject();
-
+	private void readBookList() {
+		file.getParentFile().mkdir();
+		try (FileInputStream fin = new FileInputStream(file);
+				 ObjectInputStream ois = new ObjectInputStream(fin)) {
+			file.createNewFile();
+			bookList = (List<Book>) ois.readObject();
 		} catch (FileNotFoundException e) {
-			books = new ArrayList<Book>();
-			writeBookList(books);
+			e.printStackTrace();
+			System.out.println("FILE WILL BE CREATED AUTOMATICALLY\nDont worry.");
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			books = new ArrayList<Book>();
-			writeBookList(books);
 		}
-		return books;
 	}
 
 	private void writeBookList(List<Book> books) {
-		FileOutputStream fout = null;
-		ObjectOutputStream oos = null;
-
-		try {
-			fout = new FileOutputStream("./rsc/booksfile");
-			oos = new ObjectOutputStream(fout);
+		file.getParentFile().mkdir();
+		try (FileOutputStream fout = new FileOutputStream(file);
+				 ObjectOutputStream	oos = new ObjectOutputStream(fout)) {
+			file.createNewFile();
 			oos.writeObject(books);
-
-			System.out.println("Done");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("FILE WILL BE CREATED AUTOMATICALLY\nDont worry.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void printBookList() {
-		for (Book x : bookList) {
-			printBook(x);
-		}
-	}
-
-	public void printBook(Book x) {
-		System.out.println(x.getId() + " " + x.getAuthor() + " " + x.getName() + " " + x.getYear());
 	}
 
 	public void addBook(Book newBook) {
@@ -74,7 +67,6 @@ public class Library implements AutoCloseable {
 	public void removeBook(int id) {
 		for (Book x : bookList) {
 			if (x.getId() == id) {
-				System.out.println(bookList.get(bookList.indexOf(x)).getName());
 				bookList.remove(x);
 				writeBookList(bookList);
 				break;
@@ -108,33 +100,35 @@ public class Library implements AutoCloseable {
 		}
 	}
 
-	public void findBook(int key, String value) {
+	public Book findBook(int key, String value) {
+		Book result = new Book();
 		for (Book x : bookList) {
 			switch (key) {
 			case 1:
 				if (x.getId() == Integer.parseInt(value)) {
-					printBook(x);
+					result = x;
 				}
 				break;
 			case 2:
 				if (x.getAuthor() == value) {
-					printBook(x);
+					result = x;
 				}
 				break;
 			case 3:
 				if (x.getName() == value) {
-					printBook(x);
+					result = x;
 				}
 				break;
 			case 4:
 				if (x.getYear() == Integer.parseInt(value)) {
-					printBook(x);
+					result = x;
 				}
 				break;
 			default:
 				break;
 			}
 		}
+		return result;
 	}
 
 	@Override

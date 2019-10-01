@@ -16,7 +16,10 @@ public class Book implements Serializable {
     this.year = year;
   }
 
-  public int getId() {
+  public Book() {
+  }
+
+public int getId() {
     return id;
   }
 

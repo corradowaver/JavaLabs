@@ -1,4 +1,3 @@
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -19,24 +18,14 @@ public class FileManager {
   public static Boolean writeToFile(String name, String data, Boolean appendable) {
     File file = new File(path + "/" + name);
     Boolean result = false;
-    BufferedWriter bw = null;
     if (file.exists()) {
-      try {
-        FileWriter fw = new FileWriter(file, appendable);
-        bw = new BufferedWriter(fw);
-        bw.write(data);
+      try (FileWriter fw = new FileWriter(file, appendable);) {
+        fw.write(data);
         result = true;
       } catch (IOException e) {
         System.err.println("IOException caught");
       } catch (NullPointerException e) {
         System.err.println("NullPointerException");
-      } finally {
-        try {
-          if (bw != null) 
-            bw.close();
-        } catch (IOException e) {
-          System.err.println("Cannot close");
-        }
       }
     }
     return result;

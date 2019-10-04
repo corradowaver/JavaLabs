@@ -12,15 +12,19 @@ public class UserInterface {
       String choice = sc.next();
       switch (choice) {
         case "cd" :
+          getPath();
           cd(sc.next());
           break;
         case "ls" :
+          getPath();  
           ls();
           break;
         case "mkfile" :
+          getPath();
           mkfile(sc.next());
           break;
         case "rmfile" : 
+          getPath();
           rmfile(sc.next());
           break;
         case "getpath" : 
@@ -28,8 +32,9 @@ public class UserInterface {
           break;
         case "write" :
           String name = sc.next();
+          getPath();
           System.out.println("Do you want to overwrite file? [y/n]");
-          Boolean appendable = sc.next().equals("y") ? false : true;
+          Boolean appendable = !sc.next().equals("y");
           System.out.println("Enter data you want to write: ");
           sc.nextLine();
           String data = sc.nextLine();
@@ -61,7 +66,7 @@ public class UserInterface {
   }
 
   public static void getPath() {
-    System.out.println("-Current path is : " + FileManager.getPath().toString());
+    System.out.println("\n-Current path is : " + FileManager.getPath().toString());
   }
 
   public static void cd(String arg) {

@@ -25,7 +25,8 @@ public class FileManager {
       } catch (IOException e) {
         System.err.println("IOException caught");
       } catch (NullPointerException e) {
-        System.err.println("NullPointerException");
+        System.err.println("NullPointerException. Path will be set to default");
+        setPath(Paths.get(".").toAbsolutePath().normalize());
       }
     }
     return result;
@@ -35,9 +36,10 @@ public class FileManager {
     Boolean result = false;
     try {
       File file = new File(path + "/" + name);
-      result = file.delete() ? true : false;
+      result = file.delete();
     } catch (NullPointerException e) {
-      System.err.println("NullPointerException");
+      System.err.println("NullPointerException. Path will be set to default");
+      setPath(Paths.get(".").toAbsolutePath().normalize());
     }
     return result;
   }
@@ -46,11 +48,12 @@ public class FileManager {
     File file = new File(path + "/" + name);
     Boolean result = false;
     try {
-      result = file.createNewFile() ? true : false;
+      result = file.createNewFile();
     } catch (IOException e) {
       System.err.println("IOException caught");
     } catch (NullPointerException e) {
-      System.err.println("NullPointerException");
+      System.err.println("NullPointerException. Path will be set to default");
+      setPath(Paths.get(".").toAbsolutePath().normalize());
     }
     return result;
   }
@@ -63,7 +66,8 @@ public class FileManager {
         path = path.getParent();
         result = true;
       } catch (NullPointerException e) {
-        System.err.println("NullPointerException");
+        System.err.println("NullPointerException. Path will be set to default");
+        setPath(Paths.get(".").toAbsolutePath().normalize());
       }
       break;
     }
@@ -76,7 +80,8 @@ public class FileManager {
           result = true;
         }
       } catch (NullPointerException e) {
-        System.err.println("NullPointerException");
+        System.err.println("NullPointerException. Path will be set to default");
+        setPath(Paths.get(".").toAbsolutePath().normalize());
       }
       break;
     }
@@ -87,15 +92,14 @@ public class FileManager {
   public static List<Path> ls() {
     List<Path> result = new ArrayList<>();
     try {
-      Files.list(new File(path.toString()).toPath()).forEach(x -> {
-        result.add(x);
-      });
+      Files.list(new File(path.toString()).toPath()).forEach(result::add);
     } catch (FileNotFoundException e) {
       System.err.println("FileNotFoundException");
     } catch (IOException e) {
       System.err.println("IOException");
     } catch (NullPointerException e) {
-      System.err.println("NullPointerException");
+      System.err.println("NullPointerException. Path will be set to default");
+      setPath(Paths.get(".").toAbsolutePath().normalize());
     }
     return result;
   }
@@ -104,7 +108,7 @@ public class FileManager {
     return path != null ? path : Paths.get("NULLLLLLL POINTERRRRR");
   }
 
-  public void setPath(Path path) {
+  public static void setPath(Path path) {
     FileManager.path = path;
   }
 }

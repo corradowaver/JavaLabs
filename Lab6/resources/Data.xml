@@ -1,0 +1,5 @@
+<Transactions>
+  <Transaction senderAccount="1234" getterAccount="2345" moneyAmount="1000"/>
+  <Transaction senderAccount="12234" getterAccount="2345" moneyAmount="2000.11"/>
+  <Transaction senderAccount="1234" getterAccount="2345" moneyAmount="1000"/>
+</Transactions>

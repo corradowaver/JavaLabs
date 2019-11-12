@@ -1,9 +1,11 @@
 public class Transaction {
-  
-  public Transaction() {};
+
+  public Transaction() {
+  }
+
   public Transaction(long senderAccount, long getterAccount, double moneyAmount) {
     this.senderAccount = senderAccount;
-    this.getterAccount = (getterAccount);
+    this.getterAccount = getterAccount;
     this.moneyAmount = moneyAmount;
   }
 

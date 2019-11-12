@@ -1,5 +1,5 @@
 <Transactions>
-  <Transaction senderAccount="1234" getterAccount="2345" moneyAmount="1000"/>
-  <Transaction senderAccount="12234" getterAccount="2345" moneyAmount="2000.11"/>
-  <Transaction senderAccount="1234" getterAccount="2345" moneyAmount="1000"/>
+    <Transaction senderAccount="88888888" getterAccount="44444444" moneyAmount="1000"/>
+    <Transaction senderAccount="scam account" getterAccount="44444444" moneyAmount="999999"/>
+    <Transaction senderAccount="88888888" getterAccount="44444444" moneyAmount="1000"/>
 </Transactions>

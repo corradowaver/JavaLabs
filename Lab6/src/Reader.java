@@ -20,16 +20,16 @@ public class Reader {
     init();
   }
 
-  private static ArrayList<Transaction> transactionsArray;
+  private static ArrayList<Transaction> transactionsList;
 
   public static void init() {
-    transactionsArray = new ArrayList<Transaction>();
+    transactionsList = new ArrayList<Transaction>();
     Path pathXML = Paths.get("./resources/Data.xml");
     Path pathTXT = Paths.get("./resources/Data.txt");
     if (Files.exists(pathXML) && Files.isReadable(pathXML)) {
       try {
         readFromXMLFile();
-      } catch (ParserConfigurationException | SAXException | IOException | NumberFormatException e) {
+      } catch (ParserConfigurationException | SAXException | IOException e) {
         e.printStackTrace();
       }
     } else if (Files.exists(pathTXT) && Files.isReadable(pathTXT)) {
@@ -39,12 +39,16 @@ public class Reader {
 
   private static class XMLHandler extends DefaultHandler {
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException, NumberFormatException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
       if (qName.equals("Transaction")) {
-          long senderAccount = Long.parseLong(attributes.getValue("senderAccount"));
-          long getterAccount = Long.parseLong(attributes.getValue("getterAccount"));
-          double moneyAmount = Double.parseDouble(attributes.getValue("moneyAmount"));
-          transactionsArray.add(new Transaction(senderAccount, getterAccount, moneyAmount));
+        try {
+        long senderAccount = Long.parseLong(attributes.getValue("senderAccount"));
+        long getterAccount = Long.parseLong(attributes.getValue("getterAccount"));
+        double moneyAmount = Double.parseDouble(attributes.getValue("moneyAmount"));
+        transactionsList.add(new Transaction(senderAccount, getterAccount, moneyAmount));
+        } catch (NumberFormatException e) {
+          System.err.println("Failed reading " + e.getMessage());;
+        }
       }
     }
   }
@@ -64,32 +68,32 @@ public class Reader {
         Arrays.asList(s.replaceAll(" ", "").split(",")).forEach(line -> {
           String[] args = line.split(":");
           switch (args[0]) {
-          case "senderAccount":
-            transaction.setSenderAccount(Long.parseLong(args[1]));
-            break;
-          case "getterAccount":
-            transaction.setGetterAccount(Long.parseLong(args[1]));
-            break;
-          case "moneyAmount":
-            transaction.setMoneyAmount(Double.parseDouble(args[1]));
-            break;
-          default:
-            break;
+            case "senderAccount":
+              transaction.setSenderAccount(Long.parseLong(args[1]));
+              break;
+            case "getterAccount":
+              transaction.setGetterAccount(Long.parseLong(args[1]));
+              break;
+            case "moneyAmount":
+              transaction.setMoneyAmount(Double.parseDouble(args[1]));
+              break;
+            default:
+              break;
           }
         });
-        transactionsArray.add(transaction);
+        transactionsList.add(transaction);
       });
-    } catch (IOException ex) {
+    } catch (IOException e) {
       System.out.println("Reading failed");
-      ex.printStackTrace();
+      e.printStackTrace();
     }
   }
 
-  public static ArrayList<Transaction> getTransactionsArray() {
-    return transactionsArray;
+  public static ArrayList<Transaction> getTransactionsList() {
+    return transactionsList;
   }
 
-  public static void setTransactionsArray(ArrayList<Transaction> transactionsArray) {
-    Reader.transactionsArray = transactionsArray;
+  public static void setTransactionsList(ArrayList<Transaction> transactionsList) {
+    Reader.transactionsList = transactionsList;
   }
 }

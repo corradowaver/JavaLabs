@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class Main {
 
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     ArrayList<Transaction> transactionsList = Reader.getTransactionsList();
     transactionsList.forEach(trans -> {
       System.out.println(String.format("Счет отправителя: %s, Счет получателя: %s, Денюшки %s",
@@ -34,7 +34,6 @@ public class Main {
 
     handler.startHandling();
 
-    Thread.sleep(1000);
     System.out.println("\n! After handling all transactions: !");
     handler.getAccountsList().forEach((id, account) -> {
       System.out.println("__________\nid: " + id + "\nMoney: " + account.getMoney());
